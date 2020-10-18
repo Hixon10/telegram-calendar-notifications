@@ -1,0 +1,26 @@
+micronaut:
+  application:
+    name: telegramCalendarNotifications
+  http:
+    client:
+      connect-timeout: 10s
+      read-timeout: 20s
+      num-of-threads: 2
+      max-content-length: 4096
+      default-charset: utf-8
+      connect-ttl: 10s
+      pool:
+        enabled: true
+
+telegram:
+  need-pool-updates: true
+  token: TELEGRAM_TOKEN
+
+mongodb:
+  uri: MONGO_URL
+  read-concern: majority
+  write-concern: majority
+  retry-writes: true
+
+storage:
+  database-name: calendarNotifications
