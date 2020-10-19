@@ -100,6 +100,13 @@ public class TelegramService(
             return
         }
 
-        telegramClient.sendMessage(message.chat.id, message.text!!)
+        when (message.text) {
+            "/help" -> telegramClient.sendMessage(message.chat.id, message.text!!)
+            "/calendars" -> telegramClient.sendMessage(message.chat.id, message.text!!)
+            "/stop" -> telegramClient.sendMessage(message.chat.id, message.text!!)
+            else -> {
+                telegramClient.sendMessage(message.chat.id, message.text!!)
+            }
+        }
     }
 }

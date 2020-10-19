@@ -6,7 +6,7 @@ micronaut:
       connect-timeout: 10s
       read-timeout: 20s
       num-of-threads: 2
-      max-content-length: 4096
+      max-content-length: 204800
       default-charset: utf-8
       connect-ttl: 10s
       pool:
@@ -17,7 +17,7 @@ telegram:
   token: TELEGRAM_TOKEN
 
 mongodb:
-  uri: MONGO_URL
+  uri: mongodb://localhost:27017/myproject
   read-concern: majority
   write-concern: majority
   retry-writes: true
