@@ -104,7 +104,9 @@ public class TelegramService(
             "/help" -> telegramClient.sendMessage(message.chat.id, message.text!!)
             "/calendars" -> telegramClient.sendMessage(message.chat.id, message.text!!)
             "/stop" -> telegramClient.sendMessage(message.chat.id, message.text!!)
+            "/about" -> telegramClient.sendMessage(message.chat.id, message.text!!)
             else -> {
+                // we need to save calendar event only if it is not expired yet
                 telegramClient.sendMessage(message.chat.id, message.text!!)
             }
         }

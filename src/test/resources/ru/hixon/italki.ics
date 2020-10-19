@@ -1,0 +1,42 @@
+BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//My italki calendar////
+X-WR-CALDESC:Italki Lessons
+X-WR-CALNAME:Italki Lessons
+BEGIN:VEVENT
+SUMMARY:italki Lesson: english - Ivan Ivanov
+DTSTART;VALUE=DATE-TIME:20201024T160000Z
+DTEND;VALUE=DATE-TIME:20201024T170000Z
+DTSTAMP;VALUE=DATE-TIME:20201020T190936Z
+UID:ITALKI_SESSION_123
+DESCRIPTION:Session ID: 123\nCourse /Service: Speech Practice\n
+ Teacher: Ivan Ivanov (https://www.italki.com/teacher/Ivan)\nSkype:
+  admin@example.com\nURL: https://www.italki.com/lesson/sessio
+ n/123
+LOCATION:italki.com
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY:italki Lesson: english - Vadim Ivanov
+DTSTART;VALUE=DATE-TIME:20201027T110000Z
+DTEND;VALUE=DATE-TIME:20201027T120000Z
+DTSTAMP;VALUE=DATE-TIME:20201020T190936Z
+UID:ITALKI_SESSION_82342352
+DESCRIPTION:Session ID: 82342352\nCourse /Service: Speech Practice\n
+ Teacher: Ivan Ivanov (https://www.italki.com/teacher/Ivan)\nSkype:
+  admin@example.com\nURL: https://www.italki.com/lesson/sessio
+ n/82342352
+LOCATION:italki.com
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY:italki Lesson: english - Nikolay Ivanov
+DTSTART;VALUE=DATE-TIME:20201029T130000Z
+DTEND;VALUE=DATE-TIME:20201029T140000Z
+DTSTAMP;VALUE=DATE-TIME:20201020T190936Z
+UID:ITALKI_SESSION_4242424
+DESCRIPTION:Session ID: 4242424\nCourse /Service: Speech Practice\n
+ Teacher: Ivan Ivanov (https://www.italki.com/teacher/Ivan)\nSkype:
+  admin@example.com\nURL: https://www.italki.com/lesson/sessio
+ n/4242424
+LOCATION:italki.com
+END:VEVENT
+END:VCALENDAR
