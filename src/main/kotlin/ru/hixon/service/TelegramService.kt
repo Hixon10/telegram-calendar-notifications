@@ -3,9 +3,16 @@ package ru.hixon.service
 import io.micronaut.context.annotation.Context
 import io.micronaut.core.util.StringUtils
 import org.slf4j.LoggerFactory
+import ru.hixon.ics.IcsHttpClient
+import ru.hixon.ics.IcsParser
+import ru.hixon.model.CalendarEntity
+import ru.hixon.model.CalendarEvent
 import ru.hixon.telegram.MessageResponse
 import ru.hixon.telegram.TelegramClient
 import ru.hixon.telegram.TelegramConfiguration
+import java.io.ByteArrayInputStream
+import java.net.URI
+import java.time.Duration
 import java.util.concurrent.atomic.AtomicLong
 import javax.annotation.PostConstruct
 
@@ -14,7 +21,9 @@ import javax.annotation.PostConstruct
 public class TelegramService(
         private val telegramClient: TelegramClient,
         private val storageService: StorageService,
-        private val telegramConfiguration: TelegramConfiguration
+        private val telegramConfiguration: TelegramConfiguration,
+        private val icsHttpClient: IcsHttpClient,
+        private val icsParser: IcsParser
 ) {
 
     private val logger = LoggerFactory.getLogger(TelegramService::class.java)
@@ -103,12 +112,49 @@ public class TelegramService(
         when (message.text) {
             "/help" -> telegramClient.sendMessage(message.chat.id, message.text!!)
             "/calendars" -> telegramClient.sendMessage(message.chat.id, message.text!!)
-            "/stop" -> telegramClient.sendMessage(message.chat.id, message.text!!)
-            "/about" -> telegramClient.sendMessage(message.chat.id, message.text!!)
-            else -> {
-                // we need to save calendar event only if it is not expired yet
-                telegramClient.sendMessage(message.chat.id, message.text!!)
+            "/stop" -> {
+                storageService.deleteIcsCalendarsByChatId(message.chat.id)
+                telegramClient.sendMessage(message.chat.id, "Your calendars were deleted")
             }
+            "/about" -> telegramClient.sendMessage(message.chat.id, message.text!!)
+            else -> processAddCalendarMessage(message)
         }
+    }
+
+    private fun processAddCalendarMessage(message: MessageResponse) {
+        val messageParts: List<String> = message.text!!.split("\\s+".toRegex())
+        if (messageParts.size != 2) {
+            telegramClient.sendMessage(message.chat.id, "Your message has wrong format: ${message.text}")
+            return
+        }
+
+        val notifyBeforeInMinutes: Long? = messageParts.get(1).toLongOrNull()
+        if (notifyBeforeInMinutes == null || notifyBeforeInMinutes < 0) {
+            telegramClient.sendMessage(message.chat.id, "Your message has wrong notification time: ${message.text}")
+            return
+        }
+
+        try {
+            URI(messageParts.get(0)).toURL()
+        } catch (e: Throwable) {
+            telegramClient.sendMessage(message.chat.id, "Your message has wrong URL: ${message.text}")
+            return
+        }
+
+        val icsContent = icsHttpClient.downloadIcs(messageParts.get(0))
+        if (icsContent == null || icsContent.isNullOrEmpty()) {
+            telegramClient.sendMessage(message.chat.id, "Cannot download your calendar")
+            return
+        }
+
+        val parsedCalendarEvents: List<CalendarEvent> = icsParser.parse(icsContent.byteInputStream(), Duration.ofMinutes(notifyBeforeInMinutes), message.chat.id)
+        if (parsedCalendarEvents.isEmpty()) {
+            telegramClient.sendMessage(message.chat.id, "Cannot find any events in your calendar")
+            return
+        }
+
+        storageService.saveIcsCalendar(CalendarEntity(messageParts.get(0), notifyBeforeInMinutes, message.chat.id))
+
+        telegramClient.sendMessage(message.chat.id, "Your calendar is added")
     }
 }

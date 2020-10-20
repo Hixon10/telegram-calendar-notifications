@@ -6,7 +6,7 @@ micronaut:
       connect-timeout: 10s
       read-timeout: 20s
       num-of-threads: 2
-      max-content-length: 204800
+      max-content-length: 1048576
       default-charset: utf-8
       connect-ttl: 10s
       pool:

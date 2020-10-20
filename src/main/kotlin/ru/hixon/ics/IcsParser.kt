@@ -4,6 +4,7 @@ import biweekly.Biweekly
 import biweekly.ICalendar
 import biweekly.component.VEvent
 import biweekly.io.chain.ChainingTextParser
+import biweekly.io.chain.ChainingTextStringParser
 import org.slf4j.LoggerFactory
 import ru.hixon.model.CalendarEvent
 import java.io.InputStream
@@ -32,7 +33,12 @@ public class IcsParser {
         try {
             val result = ArrayList<CalendarEvent>()
 
-            val ical: ICalendar = parseResult.first()
+            val ical: ICalendar? = parseResult.first()
+            if (ical == null) {
+                logger.info("Empty result for parsing")
+                return emptyList()
+            }
+
             for (event: VEvent? in ical.events) {
                 val startTimeStamp: Long? = event?.dateStart?.value?.time
                 val endTimeStamp: Long? = event?.dateEnd?.value?.time

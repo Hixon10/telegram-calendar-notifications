@@ -47,11 +47,12 @@ dependencies {
     runtimeOnly("ch.qos.logback:logback-classic")
     runtimeOnly("com.fasterxml.jackson.module:jackson-module-kotlin")
 
-    // https://mvnrepository.com/artifact/net.sf.biweekly/biweekly
-    compile group: 'net.sf.biweekly', name: 'biweekly', version: '0.6.4'
+//     https://mvnrepository.com/artifact/net.sf.biweekly/biweekly
+    implementation files('libs/biweekly-0.6.5-SNAPSHOT.jar')
+    compile 'com.github.mangstadt:vinnie:2.0.2'
 }
 
-mainClassName = "ru.hixon.ApplicationKt"
+mainClassName = "ru.hixon.Application"
 java {
     sourceCompatibility = JavaVersion.toVersion('11')
 }
