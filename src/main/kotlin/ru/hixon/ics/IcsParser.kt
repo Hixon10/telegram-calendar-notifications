@@ -46,13 +46,20 @@ public class IcsParser {
                     logger.info("Cannot build calendar event with null start time")
                     continue
                 }
+
+                if (event.uid == null || event.uid.value.isNullOrEmpty()) {
+                    logger.info("Uid is empty: uid={}", event.uid)
+                    continue
+                }
+
                 result.add(CalendarEvent(
                         ZonedDateTime.ofInstant(Instant.ofEpochMilli(startTimeStamp), ZoneOffset.UTC).minus(notifyBefore),
                         ZonedDateTime.ofInstant(Instant.ofEpochMilli(startTimeStamp), ZoneOffset.UTC),
                         if (endTimeStamp != null) ZonedDateTime.ofInstant(Instant.ofEpochMilli(endTimeStamp), ZoneOffset.UTC) else null,
                         event.summary?.value,
                         event.description?.value,
-                        telegramChatId
+                        telegramChatId,
+                        event.uid.value
                 ))
             }
 

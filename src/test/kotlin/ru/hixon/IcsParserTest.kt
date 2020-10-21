@@ -24,6 +24,7 @@ class IcsParserTest {
 
         // event 0
         Assertions.assertEquals(telegramChatId, calendarEvents.get(0).telegramChatId)
+        Assertions.assertEquals("ITALKI_SESSION_123", calendarEvents.get(0).uid)
         Assertions.assertEquals("italki Lesson: english - Ivan Ivanov", calendarEvents.get(0).summary)
         Assertions.assertEquals("2020-10-24T16:00Z", calendarEvents.get(0).dateStart.toString())
         Assertions.assertEquals("2020-10-24T17:00Z", calendarEvents.get(0).dateEnd.toString())
@@ -37,12 +38,14 @@ class IcsParserTest {
 
         // event 1
         Assertions.assertEquals(telegramChatId, calendarEvents.get(1).telegramChatId)
+        Assertions.assertEquals("ITALKI_SESSION_82342352", calendarEvents.get(1).uid)
         Assertions.assertEquals("italki Lesson: english - Vadim Ivanov", calendarEvents.get(1).summary)
         Assertions.assertEquals("2020-10-27T11:00Z", calendarEvents.get(1).dateStart.toString())
         Assertions.assertEquals("2020-10-27T12:00Z", calendarEvents.get(1).dateEnd.toString())
         Assertions.assertEquals(calendarEvents.get(1).dateNotification, calendarEvents.get(1).dateStart.minus(notifyBefore))
 
         // event 2
+        Assertions.assertEquals("ITALKI_SESSION_4242424", calendarEvents.get(2).uid)
         Assertions.assertEquals(telegramChatId, calendarEvents.get(2).telegramChatId)
         Assertions.assertEquals("italki Lesson: english - Nikolay Ivanov", calendarEvents.get(2).summary)
         Assertions.assertEquals("2020-10-29T13:00Z", calendarEvents.get(2).dateStart.toString())

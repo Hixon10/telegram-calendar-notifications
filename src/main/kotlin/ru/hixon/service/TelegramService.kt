@@ -10,7 +10,6 @@ import ru.hixon.model.CalendarEvent
 import ru.hixon.telegram.MessageResponse
 import ru.hixon.telegram.TelegramClient
 import ru.hixon.telegram.TelegramConfiguration
-import java.io.ByteArrayInputStream
 import java.net.URI
 import java.time.Duration
 import java.util.concurrent.atomic.AtomicLong
@@ -153,7 +152,9 @@ public class TelegramService(
             return
         }
 
-        storageService.saveIcsCalendar(CalendarEntity(messageParts.get(0), notifyBeforeInMinutes, message.chat.id))
+        storageService.upsertIcsCalendar(CalendarEntity(messageParts.get(0), notifyBeforeInMinutes, message.chat.id))
+
+        storageService.upsertCalendarEvents(parsedCalendarEvents)
 
         telegramClient.sendMessage(message.chat.id, "Your calendar is added")
     }
