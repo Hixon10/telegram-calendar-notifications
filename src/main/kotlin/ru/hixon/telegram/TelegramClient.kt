@@ -14,8 +14,7 @@ public interface TelegramClient {
     @Post("/sendMessage")
     public fun sendMessage(
             chat_id: Long,
-            text: String,
-            parse_mode: String = "MarkdownV2"
+            text: String
     ): OkResultResponse?
 
     @Post("/getUpdates")

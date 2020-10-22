@@ -26,7 +26,7 @@ public class StorageService(
 ) {
     private val logger = LoggerFactory.getLogger(StorageService::class.java)
 
-    private val offsetId = 1L;
+    private val offsetId = 1L
     private val telegramOffsetFilter = Filters.eq("_id", offsetId)
 
     private val icsUrlFieldName = "icsUrl"
@@ -69,9 +69,9 @@ public class StorageService(
     public fun getTelegramOffset(): Long? {
         val result = telegramOffsetCollection.find(telegramOffsetFilter).first()
         if (result == null) {
-            return null;
+            return null
         }
-        return result.getLong("offsetValue");
+        return result.getLong("offsetValue")
     }
 
     public fun upsertIcsCalendar(calendarEntity: CalendarEntity) {
@@ -118,7 +118,16 @@ public class StorageService(
         }
     }
 
-    public fun upsertCalendarEvents(calendarEvents: List<CalendarEvent>) {
+    public fun upsertCalendarEvents(events: List<CalendarEvent>) {
+        val currentDate = ZonedDateTime.now(ZoneOffset.UTC)
+        val calendarEvents = events.filter { ce -> ce.dateStart.isAfter(currentDate) }
+                .toList()
+
+        if (calendarEvents.isEmpty()) {
+            logger.info("There is no events: size={}", calendarEvents.size)
+            return
+        }
+
         if (calendarEvents.size > 500) {
             logger.error("Too many calendar events: size={}", calendarEvents.size)
             return
@@ -191,6 +200,11 @@ public class StorageService(
         } catch (th: Throwable) {
             logger.error("deleteCalendarEvent(): some delete error occur", th)
         }
+    }
+
+    public fun deleteCalendarEvents(telegramChatId: Long) {
+        calendarEventCollection
+                .deleteMany(Filters.eq("telegramChatId", telegramChatId))
     }
 
     private fun buildCalendarEventId(telegramChatId: Long, uid: String): String {

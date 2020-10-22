@@ -18,8 +18,69 @@ class StorageServiceTest {
     lateinit var storageService: StorageService
 
     @Test
-    fun testUpsertCalendarEvents() {
-        val startEventDate = ZonedDateTime.of(2020, 10, 22, 17, 0, 0, 0, ZoneOffset.UTC)
+    fun testUpsertNewAndOldEvents() {
+        val telegramChatId: Long = 137
+
+        val oldDate = ZonedDateTime.now(ZoneOffset.UTC).minusMinutes(1)
+        val oldEvent = CalendarEvent(oldDate.minusMinutes(20), oldDate, oldDate.plusHours(1), "old event", "old event", telegramChatId, UUID.randomUUID().toString())
+
+        val newDate = ZonedDateTime.now(ZoneOffset.UTC).plusMinutes(1)
+        val newEvent = CalendarEvent(newDate.minusMinutes(20), newDate, newDate.plusHours(1), "new event", "new event", telegramChatId, UUID.randomUUID().toString())
+
+        storageService.upsertCalendarEvents(listOf(
+                oldEvent,
+                newEvent
+        ))
+
+        val firstAndSecondEvents = storageService.findCalendarEventsForNotification(newEvent.dateNotification.plusMinutes(1)).filter { it.uid == oldEvent.uid || it.uid == newEvent.uid }
+        Assertions.assertEquals(1, firstAndSecondEvents.size)
+
+        Assertions.assertEquals(newEvent.uid, firstAndSecondEvents.firstOrNull { it.uid == newEvent.uid }!!.uid)
+
+        storageService.deleteCalendarEvent(newEvent)
+    }
+
+    @Test
+    fun testUpsertCalendarEvents1() {
+        val telegramChatId: Long = 137
+        val newDate = ZonedDateTime.now(ZoneOffset.UTC).plusMinutes(2)
+
+        val firstElement = CalendarEvent(newDate.minusMinutes(17), newDate, newDate.plusHours(1), "summary1", "description1", telegramChatId, UUID.randomUUID().toString())
+
+        val secondElement = CalendarEvent(newDate.minusMinutes(18), newDate, newDate.plusHours(1), "summary2", "description2", telegramChatId, UUID.randomUUID().toString())
+
+        val thirdElement = CalendarEvent(newDate.minusMinutes(19), newDate, newDate.plusHours(1), "summary3", "description3", telegramChatId, UUID.randomUUID().toString())
+
+        storageService.upsertCalendarEvents(listOf(
+                firstElement,
+                secondElement
+        ))
+
+        val firstAndSecondEvents = storageService.findCalendarEventsForNotification(firstElement.dateNotification.plusMinutes(1)).filter { it.uid == firstElement.uid || it.uid == secondElement.uid || it.uid == thirdElement.uid }
+        Assertions.assertEquals(2, firstAndSecondEvents.size)
+
+        Assertions.assertEquals(firstElement.uid, firstAndSecondEvents.firstOrNull { it.uid == firstElement.uid }!!.uid)
+        Assertions.assertEquals(secondElement.uid, firstAndSecondEvents.firstOrNull { it.uid == secondElement.uid }!!.uid)
+
+        storageService.upsertCalendarEvents(listOf(
+                firstElement,
+                secondElement,
+                thirdElement
+        ))
+
+        val firstAndSecondAndThirdEvents = storageService.findCalendarEventsForNotification(firstElement.dateNotification.plusMinutes(1)).filter { it.uid == firstElement.uid || it.uid == secondElement.uid || it.uid == thirdElement.uid }
+        Assertions.assertEquals(3, firstAndSecondAndThirdEvents.size)
+
+        Assertions.assertEquals(firstElement.uid, firstAndSecondAndThirdEvents.firstOrNull { it.uid == firstElement.uid }!!.uid)
+        Assertions.assertEquals(secondElement.uid, firstAndSecondAndThirdEvents.firstOrNull { it.uid == secondElement.uid }!!.uid)
+        Assertions.assertEquals(thirdElement.uid, firstAndSecondAndThirdEvents.firstOrNull { it.uid == thirdElement.uid }!!.uid)
+
+        storageService.deleteCalendarEvents(telegramChatId)
+    }
+
+    @Test
+    fun testUpsertCalendarEvents2() {
+        val startEventDate = ZonedDateTime.now(ZoneOffset.UTC).plusMinutes(2)
         val firstElement = CalendarEvent(startEventDate.minusMinutes(15), startEventDate, startEventDate.plusHours(1), "summary", "description", 42, UUID.randomUUID().toString())
 
         storageService.upsertCalendarEvents(listOf(
@@ -38,9 +99,9 @@ class StorageServiceTest {
 
         Assertions.assertEquals(firstElement.uid, foundFirstElement.get(0).uid)
         Assertions.assertEquals(firstElement.telegramChatId, foundFirstElement.get(0).telegramChatId)
-        Assertions.assertEquals(firstElement.dateNotification, foundFirstElement.get(0).dateNotification)
-        Assertions.assertEquals(firstElement.dateStart, foundFirstElement.get(0).dateStart)
-        Assertions.assertEquals(firstElement.dateEnd, foundFirstElement.get(0).dateEnd)
+        Assertions.assertEquals(firstElement.dateNotification.toEpochSecond(), foundFirstElement.get(0).dateNotification.toEpochSecond())
+        Assertions.assertEquals(firstElement.dateStart.toEpochSecond(), foundFirstElement.get(0).dateStart.toEpochSecond())
+        Assertions.assertEquals(firstElement.dateEnd!!.toEpochSecond(), foundFirstElement.get(0).dateEnd!!.toEpochSecond())
         Assertions.assertEquals(firstElement.description, foundFirstElement.get(0).description)
         Assertions.assertEquals(firstElement.summary, foundFirstElement.get(0).summary)
 

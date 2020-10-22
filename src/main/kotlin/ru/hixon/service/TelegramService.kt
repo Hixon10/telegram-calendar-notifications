@@ -113,6 +113,7 @@ public class TelegramService(
             "/calendars" -> telegramClient.sendMessage(message.chat.id, message.text!!)
             "/stop" -> {
                 storageService.deleteIcsCalendarsByChatId(message.chat.id)
+                storageService.deleteCalendarEvents(message.chat.id)
                 telegramClient.sendMessage(message.chat.id, "Your calendars were deleted")
             }
             "/about" -> telegramClient.sendMessage(message.chat.id, message.text!!)
