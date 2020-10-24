@@ -21,7 +21,7 @@ public class NotificationService(
     @PostConstruct
     public fun init() {
         if (!telegramConfiguration.needPoolUpdates!!) {
-            // we do not want to send notifications in test
+            // we don't want to send notifications in test
             return
         }
 
