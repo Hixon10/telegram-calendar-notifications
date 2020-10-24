@@ -1,0 +1,16 @@
+name: CI
+on: [push]
+jobs:
+  build:
+    runs-on: ubuntu-20.04
+    steps:
+      - name: Git checkout
+        uses: actions/checkout@v2
+      - name: Set up Graalvm
+        uses: ayltai/setup-graalvm@v1
+        with:
+          java-version: 11
+          graalvm-version: 20.2.0
+          native-image: true
+      - name: Build
+        run: java --version
