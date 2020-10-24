@@ -12,5 +12,7 @@ jobs:
           java-version: 11
           graalvm-version: 20.2.0
           native-image: true
+      - name: Make gradlew executable
+        run: chmod +x ./gradlew
       - name: Build
         run: ./gradlew dockerBuildNative
