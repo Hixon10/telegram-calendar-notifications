@@ -128,11 +128,16 @@ public class TelegramService(
 
     private fun sendMyCalendars(message: MessageResponse) {
         val icsCalendars = storageService.getIcsCalendarsByChatId(message.chat.id)
-        val sb = StringBuilder()
-        for (icsCalendar in icsCalendars) {
-            sb.append("${icsCalendar.icsUrl} ${icsCalendar.notifyBeforeInMinutes}\r\n")
+        val text: String = if (icsCalendars.isEmpty()) {
+            "You have no subscribed calendars"
+        } else {
+            val sb = StringBuilder()
+            for (icsCalendar in icsCalendars) {
+                sb.append("<pre>${icsCalendar.icsUrl} ${icsCalendar.notifyBeforeInMinutes}</pre>\r\n")
+            }
+            sb.subSequence(0, Math.min(4000, sb.length)).toString()
         }
-        val text = sb.subSequence(0, Math.min(4000, sb.length)).toString()
+
         telegramClient.sendMessage(message.chat.id, text)
     }
 
