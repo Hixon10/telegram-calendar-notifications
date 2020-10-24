@@ -133,7 +133,7 @@ public class TelegramService(
         } else {
             val sb = StringBuilder()
             for (icsCalendar in icsCalendars) {
-                sb.append("`${icsCalendar.icsUrl} ${icsCalendar.notifyBeforeInMinutes}`\r\n")
+                sb.append("${icsCalendar.icsUrl} ${icsCalendar.notifyBeforeInMinutes}\r\n")
             }
             sb.subSequence(0, Math.min(4000, sb.length)).toString()
         }
