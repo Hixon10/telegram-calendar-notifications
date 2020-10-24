@@ -10,6 +10,7 @@ import ru.hixon.model.CalendarEvent
 import ru.hixon.telegram.MessageResponse
 import ru.hixon.telegram.TelegramClient
 import ru.hixon.telegram.TelegramConfiguration
+import java.lang.StringBuilder
 import java.net.URI
 import java.time.Duration
 import java.util.concurrent.atomic.AtomicLong
@@ -109,16 +110,30 @@ public class TelegramService(
         }
 
         when (message.text) {
-            "/help" -> telegramClient.sendMessage(message.chat.id, message.text!!)
-            "/calendars" -> telegramClient.sendMessage(message.chat.id, message.text!!)
+            "/help" -> {
+                val text = "You need to send ics URL and before notification minutes to the bot. For example:\r\n" +
+                        "https://example.ru/3242352/file.ics 15"
+                telegramClient.sendMessage(message.chat.id, text)
+            }
+            "/calendars" -> sendMyCalendars(message)
             "/stop" -> {
                 storageService.deleteIcsCalendarsByChatId(message.chat.id)
                 storageService.deleteCalendarEvents(message.chat.id)
                 telegramClient.sendMessage(message.chat.id, "Your calendars were deleted")
             }
-            "/about" -> telegramClient.sendMessage(message.chat.id, message.text!!)
+            "/about" -> telegramClient.sendMessage(message.chat.id, "https://github.com/Hixon10/telegram-calendar-notifications")
             else -> processAddCalendarMessage(message)
         }
+    }
+
+    private fun sendMyCalendars(message: MessageResponse) {
+        val icsCalendars = storageService.getIcsCalendarsByChatId(message.chat.id)
+        val sb = StringBuilder()
+        for (icsCalendar in icsCalendars) {
+            sb.append("${icsCalendar.icsUrl} ${icsCalendar.notifyBeforeInMinutes}\r\n")
+        }
+        val text = sb.subSequence(0, Math.min(4000, sb.length)).toString()
+        telegramClient.sendMessage(message.chat.id, text)
     }
 
     private fun processAddCalendarMessage(message: MessageResponse) {

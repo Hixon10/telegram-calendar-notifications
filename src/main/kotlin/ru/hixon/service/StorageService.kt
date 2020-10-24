@@ -1,5 +1,6 @@
 package ru.hixon.service
 
+import com.mongodb.client.FindIterable
 import com.mongodb.client.MongoClient
 import com.mongodb.client.MongoCollection
 import com.mongodb.client.model.Filters
@@ -93,20 +94,19 @@ public class StorageService(
                 .deleteMany(Filters.eq(telegramChatIdFieldName, telegramChatId))
     }
 
+    public fun getIcsCalendarsByChatId(telegramChatId: Long): List<CalendarEntity> {
+        val findResult = icsUrlCollection
+                .find(Filters.eq(telegramChatIdFieldName, telegramChatId))
+
+        return convertCalendarEntities(findResult)
+    }
+
     public fun getAllCalendars(): List<CalendarEntity> {
         try {
-            val result = ArrayList<CalendarEntity>()
             val limit = 500
             val findResult = icsUrlCollection.find().limit(limit)
 
-            for (document in findResult) {
-                result.add(CalendarEntity(
-                        document.getString(icsUrlFieldName),
-                        document.getLong(notifyBeforeInMinutesFieldName),
-                        document.getLong(telegramChatIdFieldName)
-                ))
-            }
-
+            val result = convertCalendarEntities(findResult)
             if (result.size == limit) {
                 logger.error("Too many calendars; we need to introduce pagination for it")
             }
@@ -223,5 +223,17 @@ public class StorageService(
             return null
         }
         return Date.from(zonedDateTime.toInstant())
+    }
+
+    private fun convertCalendarEntities(findResult: FindIterable<Document>): List<CalendarEntity> {
+        val result = ArrayList<CalendarEntity>()
+        for (document in findResult) {
+            result.add(CalendarEntity(
+                    document.getString(icsUrlFieldName),
+                    document.getLong(notifyBeforeInMinutesFieldName),
+                    document.getLong(telegramChatIdFieldName)
+            ))
+        }
+        return result
     }
 }

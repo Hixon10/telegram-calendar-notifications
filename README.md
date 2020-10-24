@@ -16,10 +16,13 @@ https://example.ru/3242352/file.ics 15
 
 ## Bot commands:
 1. `stop` - Stop sending notifications
+2. `about` - Get github link to the bot repository
+3. `calendars` - Send subscribed calendars
+4. `help` - Info, how to use the bot
 
 ## Run bot:
 1. We have pre-build docker images with this bot: https://github.com/users/Hixon10/packages/container/package/telegram-calendar-notifications%2Ftelegram-calendar-notifications
-2. Most straightforward way how to run it is configure of settings in `env.list` (file in this repo) and run `run.sh` script (file in this repo)
+2. Most straightforward way how to run it is configure of settings in `env.list` ( https://github.com/Hixon10/telegram-calendar-notifications/blob/master/env.list ) and run `run.sh` ( https://github.com/Hixon10/telegram-calendar-notifications/blob/master/run.sh )
 
 ## Build:
 1. Set telegram token via `TELEGRAM_TOKEN` environment variable
