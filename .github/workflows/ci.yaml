@@ -13,4 +13,4 @@ jobs:
           graalvm-version: 20.2.0
           native-image: true
       - name: Build
-        run: java --version && native-image --version
+        run: ./gradlew dockerBuildNative
