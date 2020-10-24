@@ -14,6 +14,8 @@ jobs:
           native-image: true
       - name: Make gradlew executable
         run: chmod +x ./gradlew
+      - name: Make bash scripts executable
+        run: chmod +x ./.automation/upload-docker.sh
       - name: Build
         run: ./gradlew dockerBuildNative
       - name: Publish image to GitHub Container Registry
