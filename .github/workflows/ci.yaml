@@ -16,3 +16,11 @@ jobs:
         run: chmod +x ./gradlew
       - name: Build
         run: ./gradlew dockerBuildNative
+      - name: Push image to GitHub Container Registry
+        uses: docker/build-push-action@v1
+        with:
+          username: ${{ secrets.REGISTRY_USERNAME }}
+          password: ${{ secrets.REGISTRY_TOKEN }}
+          registry: ghcr.io
+          repository: hixon10/telegram-calendar-notifications/telegram-calendar-notifications
+          tag_with_ref: true
