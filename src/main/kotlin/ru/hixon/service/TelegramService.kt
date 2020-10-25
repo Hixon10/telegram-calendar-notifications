@@ -116,6 +116,7 @@ public class TelegramService(
                 telegramClient.sendMessage(message.chat.id, text)
             }
             "/calendars" -> sendMyCalendars(message)
+            "/events" -> sendMyEvents(message)
             "/stop" -> {
                 storageService.deleteIcsCalendarsByChatId(message.chat.id)
                 storageService.deleteCalendarEvents(message.chat.id)
@@ -124,6 +125,21 @@ public class TelegramService(
             "/about" -> telegramClient.sendMessage(message.chat.id, "https://github.com/Hixon10/telegram-calendar-notifications")
             else -> processAddCalendarMessage(message)
         }
+    }
+
+    private fun sendMyEvents(message: MessageResponse) {
+        val calendarEvents = storageService.getCalendarEventsByChatId(message.chat.id)
+        val text: String = if (calendarEvents.isEmpty()) {
+            "You have no events"
+        } else {
+            val sb = StringBuilder()
+            for (calendarEvent in calendarEvents.sortedBy { a -> a.dateStart.toEpochSecond() }) {
+                sb.append("${calendarEvent.dateStart} ${calendarEvent.summary ?: "no summary"}\r\n")
+            }
+            sb.subSequence(0, Math.min(4000, sb.length)).toString()
+        }
+
+        telegramClient.sendMessage(message.chat.id, text)
     }
 
     private fun sendMyCalendars(message: MessageResponse) {

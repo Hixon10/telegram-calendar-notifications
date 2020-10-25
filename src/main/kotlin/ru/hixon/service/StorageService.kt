@@ -172,21 +172,7 @@ public class StorageService(
     public fun findCalendarEventsForNotification(currentTime: ZonedDateTime = ZonedDateTime.now(ZoneOffset.UTC)): List<CalendarEvent> {
         try {
             val findResult = calendarEventCollection.find(Filters.lt("dateNotification", convertToDate(currentTime)!!)).limit(100)
-            val result = ArrayList<CalendarEvent>()
-
-            for (calendarEventDocument in findResult) {
-                result.add(CalendarEvent(
-                        convertToZonedDateTime(calendarEventDocument.getDate("dateNotification"))!!,
-                        convertToZonedDateTime(calendarEventDocument.getDate("dateStart"))!!,
-                        convertToZonedDateTime(calendarEventDocument.getDate("dateEnd")),
-                        calendarEventDocument.getString("summary"),
-                        calendarEventDocument.getString("description"),
-                        calendarEventDocument.getLong("telegramChatId"),
-                        calendarEventDocument.getString("uid")
-                ))
-            }
-
-            return result
+            return convertCalendarEvents(findResult)
         } catch (th: Throwable) {
             logger.error("findCalendarEventsForNotification(): some error occurs", th)
             return emptyList()
@@ -205,6 +191,13 @@ public class StorageService(
     public fun deleteCalendarEvents(telegramChatId: Long) {
         calendarEventCollection
                 .deleteMany(Filters.eq("telegramChatId", telegramChatId))
+    }
+
+    public fun getCalendarEventsByChatId(telegramChatId: Long): List<CalendarEvent> {
+        val findResult = calendarEventCollection
+                .find(Filters.eq("telegramChatId", telegramChatId)).limit(50)
+
+        return convertCalendarEvents(findResult)
     }
 
     private fun buildCalendarEventId(telegramChatId: Long, uid: String): String {
@@ -232,6 +225,23 @@ public class StorageService(
                     document.getString(icsUrlFieldName),
                     document.getLong(notifyBeforeInMinutesFieldName),
                     document.getLong(telegramChatIdFieldName)
+            ))
+        }
+        return result
+    }
+
+    private fun convertCalendarEvents(findResult: FindIterable<Document>): List<CalendarEvent> {
+        val result = ArrayList<CalendarEvent>()
+
+        for (calendarEventDocument in findResult) {
+            result.add(CalendarEvent(
+                    convertToZonedDateTime(calendarEventDocument.getDate("dateNotification"))!!,
+                    convertToZonedDateTime(calendarEventDocument.getDate("dateStart"))!!,
+                    convertToZonedDateTime(calendarEventDocument.getDate("dateEnd")),
+                    calendarEventDocument.getString("summary"),
+                    calendarEventDocument.getString("description"),
+                    calendarEventDocument.getLong("telegramChatId"),
+                    calendarEventDocument.getString("uid")
             ))
         }
         return result

@@ -19,6 +19,7 @@ https://example.ru/3242352/file.ics 15
 2. `about` - Get github link to the bot repository
 3. `calendars` - Send subscribed calendars
 4. `help` - Info, how to use the bot
+5. `events` - Send my events
 
 ## Run bot:
 1. We have pre-build docker images with this bot: https://github.com/users/Hixon10/packages/container/package/telegram-calendar-notifications%2Ftelegram-calendar-notifications
