@@ -9,11 +9,20 @@
         </encoder>
     </appender>
 
+    <appender name="json" class="ch.qos.logback.core.ConsoleAppender">
+        <layout class="ch.qos.logback.contrib.json.classic.JsonLayout">
+            <jsonFormatter
+                    class="ch.qos.logback.contrib.jackson.JacksonJsonFormatter">
+                <prettyPrint>true</prettyPrint>
+            </jsonFormatter>
+<!--            <timestampFormat>yyyy-MM-dd' 'HH:mm:ss.SSS</timestampFormat>-->
+        </layout>
+    </appender>
+
 <!--    <logger name="io.micronaut.http.client" level="TRACE"/>-->
 
-    <include resource="io/micronaut/gcp/logging/logback-json-appender.xml" />
     <root level="info">
-        <appender-ref ref="CONSOLE_JSON" />
+        <appender-ref ref="json" />
         <!--        <appender-ref ref="STDOUT" />-->
     </root>
 </configuration>

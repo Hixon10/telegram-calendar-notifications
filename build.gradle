@@ -51,7 +51,10 @@ dependencies {
     implementation files('libs/biweekly-0.6.5-SNAPSHOT.jar')
     compile 'com.github.mangstadt:vinnie:2.0.2'
 
-    implementation("io.micronaut.gcp:micronaut-gcp-logging:3.2.1")
+    // https://mvnrepository.com/artifact/ch.qos.logback.contrib/logback-json-classic
+    compile group: 'ch.qos.logback.contrib', name: 'logback-json-classic', version: '0.1.5'
+    // https://mvnrepository.com/artifact/ch.qos.logback.contrib/logback-jackson
+    compile group: 'ch.qos.logback.contrib', name: 'logback-jackson', version: '0.1.5'
 }
 
 mainClassName = "ru.hixon.Application"
