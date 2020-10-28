@@ -50,6 +50,8 @@ dependencies {
 //     https://mvnrepository.com/artifact/net.sf.biweekly/biweekly
     implementation files('libs/biweekly-0.6.5-SNAPSHOT.jar')
     compile 'com.github.mangstadt:vinnie:2.0.2'
+
+    implementation("io.micronaut.gcp:micronaut-gcp-logging:3.2.1")
 }
 
 mainClassName = "ru.hixon.Application"

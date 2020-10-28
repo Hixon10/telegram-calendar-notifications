@@ -11,7 +11,9 @@
 
 <!--    <logger name="io.micronaut.http.client" level="TRACE"/>-->
 
+    <include resource="io/micronaut/gcp/logging/logback-json-appender.xml" />
     <root level="info">
-        <appender-ref ref="STDOUT" />
+        <appender-ref ref="CONSOLE_JSON" />
+        <!--        <appender-ref ref="STDOUT" />-->
     </root>
 </configuration>
