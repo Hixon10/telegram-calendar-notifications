@@ -15,6 +15,7 @@
                     class="ch.qos.logback.contrib.jackson.JacksonJsonFormatter">
 <!--                <prettyPrint>true</prettyPrint>-->
             </jsonFormatter>
+            <appendLineSeparator>true</appendLineSeparator>
 <!--            <timestampFormat>yyyy-MM-dd' 'HH:mm:ss.SSS</timestampFormat>-->
         </layout>
     </appender>
