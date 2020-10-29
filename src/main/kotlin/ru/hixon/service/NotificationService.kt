@@ -50,7 +50,10 @@ public class NotificationService(
             val messageText = "${calendarEvent.summary} \r\n${calendarEvent.description} \r\nfrom: ${calendarEvent.dateStart} \r\nto: ${calendarEvent.dateEnd}"
 
             try {
-                telegramClient.sendMessage(calendarEvent.telegramChatId, messageText.subSequence(0, Math.min(4000, messageText.length)).toString())
+                if (!storageService.isNotificationSent(calendarEvent)) {
+                    telegramClient.sendMessage(calendarEvent.telegramChatId, messageText.subSequence(0, Math.min(4000, messageText.length)).toString())
+                    storageService.insertEventNotificationSent(calendarEvent)
+                }
             } catch (th: Throwable) {
                 logger.error("sendNotifications(): cannot send notification to user: {}", calendarEvent.telegramChatId)
 

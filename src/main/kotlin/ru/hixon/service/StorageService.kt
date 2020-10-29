@@ -40,6 +40,8 @@ public class StorageService(
 
     private lateinit var calendarEventCollection: MongoCollection<Document>
 
+    private lateinit var sentNotificationCollection: MongoCollection<Document>
+
     @PostConstruct
     public fun init() {
         logger.info("Storage service started")
@@ -55,6 +57,33 @@ public class StorageService(
         calendarEventCollection = mongoClient
                 .getDatabase(storageConfiguration.databaseName)
                 .getCollection("calendarEvent")
+
+        sentNotificationCollection = mongoClient
+                .getDatabase(storageConfiguration.databaseName)
+                .getCollection("sentNotification")
+    }
+
+    public fun insertEventNotificationSent(calendarEvent: CalendarEvent) {
+        var documentId: String? = null
+        try {
+            documentId = buildCalendarEventId(calendarEvent.telegramChatId, calendarEvent.uid)
+
+            sentNotificationCollection.insertOne(Document()
+                    .append("_id", documentId))
+        } catch (th: Throwable) {
+            logger.error("insertEventNotificationSent(): receive error: documentId={}", documentId, th)
+        }
+    }
+
+    public fun isNotificationSent(calendarEvent: CalendarEvent): Boolean {
+        var documentId: String? = null
+        try {
+            documentId = buildCalendarEventId(calendarEvent.telegramChatId, calendarEvent.uid)
+            return sentNotificationCollection.countDocuments(Filters.eq("_id", documentId)) > 0
+        } catch (th: Throwable) {
+            logger.error("isNotificationSent(): receive error: documentId={}", documentId, th)
+            return false
+        }
     }
 
     public fun saveTelegramOffset(offset: Long) {

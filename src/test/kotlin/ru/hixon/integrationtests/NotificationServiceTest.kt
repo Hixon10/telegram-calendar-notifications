@@ -1,6 +1,7 @@
 package ru.hixon.integrationtests
 
 import io.micronaut.test.extensions.junit5.annotation.MicronautTest
+import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
 import ru.hixon.model.CalendarEvent
 import ru.hixon.service.NotificationService
@@ -30,15 +31,26 @@ class NotificationServiceTest {
                 "URL: https://www.italki.com/lesson/session/123"
 
         val startEventDate = ZonedDateTime.now(ZoneOffset.UTC).plusMinutes(2)
-        val firstElement = CalendarEvent(startEventDate.minusMinutes(15), startEventDate, startEventDate.plusHours(1), "italki Lesson: english - Vadim Ivanov", description, telegramChatId, UUID.randomUUID().toString())
+        val calendarEvent = CalendarEvent(startEventDate.minusMinutes(15), startEventDate, startEventDate.plusHours(1), "italki Lesson: english - Vadim Ivanov", description, telegramChatId, UUID.randomUUID().toString())
 
         storageService.upsertCalendarEvents(listOf(
-                firstElement
+                calendarEvent
         ))
+
+        Assertions.assertFalse(storageService.isNotificationSent(calendarEvent))
 
         notificationService.sendNotifications()
 
+        Assertions.assertTrue(storageService.isNotificationSent(calendarEvent))
+
         Thread.sleep(300)
+
+        notificationService.sendNotifications()
+
+        // we need to test, that we don't send notification second time
+        storageService.upsertCalendarEvents(listOf(
+                calendarEvent
+        ))
 
         notificationService.sendNotifications()
     }
