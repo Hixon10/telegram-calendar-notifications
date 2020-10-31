@@ -29,4 +29,15 @@ class IcsHttpClientTest {
         val parsedIcs = icsParser.parse(icsContent.byteInputStream(), Duration.ofMinutes(15), 435)
         Assertions.assertTrue(parsedIcs.isNotEmpty())
     }
+
+    @Test
+    fun testDownloadYandexIcs() {
+        val icsUrl = "https://calendar.yandex.ru/export/ics.xml?private_token=TOKEN"
+        val icsContent = icsHttpClient.downloadIcs(icsUrl)
+
+        Assertions.assertTrue(StringUtils.isNotEmpty(icsContent))
+
+        val parsedIcs = icsParser.parse(icsContent!!.byteInputStream(), Duration.ofMinutes(15), 435)
+        Assertions.assertTrue(parsedIcs.isNotEmpty())
+    }
 }

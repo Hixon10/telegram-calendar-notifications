@@ -3,6 +3,7 @@ package ru.hixon.service
 import io.micronaut.context.annotation.Context
 import io.micronaut.core.util.StringUtils
 import org.slf4j.LoggerFactory
+import ru.hixon.exception.ExceptionUtils
 import ru.hixon.ics.IcsHttpClient
 import ru.hixon.ics.IcsParser
 import ru.hixon.model.CalendarEntity
@@ -13,6 +14,8 @@ import ru.hixon.telegram.TelegramConfiguration
 import java.lang.StringBuilder
 import java.net.URI
 import java.time.Duration
+import java.time.ZoneOffset
+import java.time.ZonedDateTime
 import java.util.concurrent.atomic.AtomicLong
 import javax.annotation.PostConstruct
 
@@ -56,7 +59,14 @@ public class TelegramService(
                             logger.info("${Thread.currentThread().name} thread were interrupted")
                             return@Thread
                         }
-                        else -> logger.error("Receive error in GetUpdates loop", th)
+                        else -> {
+                            if (ExceptionUtils.indexOfThrowable(th, java.lang.OutOfMemoryError::class.java) != -1) {
+                                logger.error("Got OutOfMemoryError in GetUpdates loop", th)
+                                System.exit(1)
+                            } else {
+                                logger.error("Receive error in GetUpdates loop", th)
+                            }
+                        }
                     }
                 }
             }
@@ -132,9 +142,10 @@ public class TelegramService(
         val text: String = if (calendarEvents.isEmpty()) {
             "You have no events"
         } else {
+            val currentDate = ZonedDateTime.now(ZoneOffset.UTC)
             val sb = StringBuilder()
             for (calendarEvent in calendarEvents.sortedBy { a -> a.dateStart.toEpochSecond() }) {
-                sb.append("${calendarEvent.dateStart} ${calendarEvent.summary ?: "no summary"}\r\n")
+                sb.append("${calendarEvent.dateStart} [${Duration.between(currentDate, calendarEvent.dateStart).toHours()} hours] ${calendarEvent.summary ?: "no summary"}\r\n")
             }
             sb.subSequence(0, Math.min(4000, sb.length)).toString()
         }

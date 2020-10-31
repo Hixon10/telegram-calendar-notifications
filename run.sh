@@ -1,1 +1,1 @@
-docker run --name telegram-calendar-notifications --memory=100MB --log-opt max-size=10m --log-opt max-file=5 -d --restart=always --env-file env.list ghcr.io/hixon10/telegram-calendar-notifications/telegram-calendar-notifications:latest
+docker run --name telegram-calendar-notifications --memory=200MB --log-opt max-size=10m --log-opt max-file=5 -d --restart=always --env-file env.list ghcr.io/hixon10/telegram-calendar-notifications/telegram-calendar-notifications:latest
