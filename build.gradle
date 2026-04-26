@@ -83,10 +83,3 @@ kotlin {
         jvmTarget = org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_25
     }
 }
-
-tasks.named("dockerfileNative") {
-    doLast {
-        def f = destFile.get().asFile
-        f.text = f.text.replace('COPY --link', 'COPY')
-    }
-}
