@@ -2,25 +2,30 @@ name: CI
 on: [push]
 jobs:
   build:
-    runs-on: ubuntu-18.04
+    runs-on: ubuntu-latest
     steps:
       - name: Git checkout
-        uses: actions/checkout@v2
-      - name: Set up Graalvm
-        uses: ayltai/setup-graalvm@v1
+        uses: actions/checkout@v6
+
+      - name: Set up GraalVM
+        uses: graalvm/setup-graalvm@v1
         with:
-          java-version: 11
-          graalvm-version: 20.2.0
-          native-image: true
+          java-version: '25'
+          distribution: 'graalvm'
+          native-image-job-reports: 'true'
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+
       - name: Make gradlew executable
         run: chmod +x ./gradlew
+
       - name: Make bash scripts executable
         run: chmod +x ./.automation/upload-docker.sh
+
       - name: Build
         run: ./gradlew dockerBuildNative
+
       - name: Publish image to GitHub Container Registry
         env:
-          # Set the Env Vars
           GCR_USERNAME: ${{ secrets.REGISTRY_USERNAME }}
           GCR_TOKEN: ${{ secrets.REGISTRY_TOKEN }}
         shell: bash
