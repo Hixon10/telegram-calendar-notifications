@@ -7,6 +7,13 @@ jobs:
       - name: Git checkout
         uses: actions/checkout@v6
 
+      - name: Disable containerd image store (fix docker-java layer bug)
+        run: |
+          echo '{ "features": { "containerd-snapshotter": false } }' \
+            | sudo tee /etc/docker/daemon.json
+          sudo systemctl restart docker
+          docker info | grep -i 'storage driver'
+
       - name: Set up GraalVM
         uses: graalvm/setup-graalvm@v1
         with:
