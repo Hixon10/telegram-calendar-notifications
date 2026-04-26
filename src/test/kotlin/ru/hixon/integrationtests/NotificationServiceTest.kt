@@ -1,6 +1,7 @@
 package ru.hixon.integrationtests
 
 import io.micronaut.test.extensions.junit5.annotation.MicronautTest
+import jakarta.inject.Inject
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
 import ru.hixon.model.CalendarEvent
@@ -9,7 +10,6 @@ import ru.hixon.service.StorageService
 import java.time.ZoneOffset
 import java.time.ZonedDateTime
 import java.util.*
-import javax.inject.Inject
 
 @MicronautTest
 class NotificationServiceTest {

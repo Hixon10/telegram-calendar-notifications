@@ -1,10 +1,10 @@
 package ru.hixon.service
 
 import io.micronaut.context.annotation.Context
+import jakarta.annotation.PostConstruct
 import org.slf4j.LoggerFactory
 import ru.hixon.telegram.TelegramClient
 import ru.hixon.telegram.TelegramConfiguration
-import javax.annotation.PostConstruct
 
 
 @Context

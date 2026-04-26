@@ -2,12 +2,12 @@ package ru.hixon.integrationtests
 
 import io.micronaut.core.util.StringUtils
 import io.micronaut.test.extensions.junit5.annotation.MicronautTest
+import jakarta.inject.Inject
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
 import ru.hixon.ics.IcsHttpClient
 import ru.hixon.ics.IcsParser
 import java.time.Duration
-import javax.inject.Inject
 
 @MicronautTest
 class IcsHttpClientTest {

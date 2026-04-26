@@ -2,6 +2,7 @@ package ru.hixon.service
 
 import io.micronaut.context.annotation.Context
 import io.micronaut.core.util.StringUtils
+import jakarta.annotation.PostConstruct
 import org.slf4j.LoggerFactory
 import ru.hixon.exception.ExceptionUtils
 import ru.hixon.ics.IcsHttpClient
@@ -17,7 +18,6 @@ import java.time.Duration
 import java.time.ZoneOffset
 import java.time.ZonedDateTime
 import java.util.concurrent.atomic.AtomicLong
-import javax.annotation.PostConstruct
 
 
 @Context

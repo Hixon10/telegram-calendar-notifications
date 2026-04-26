@@ -1,11 +1,11 @@
 package ru.hixon
 import io.micronaut.jackson.serialize.JacksonObjectSerializer
 import io.micronaut.test.extensions.junit5.annotation.MicronautTest
+import jakarta.inject.Inject
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
 import ru.hixon.telegram.GetUpdatesResponse
 import ru.hixon.telegram.OkResultResponse
-import javax.inject.Inject
 
 @MicronautTest
 class TelegramDeserializationResponsesTest {

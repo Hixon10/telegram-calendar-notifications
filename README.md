@@ -31,9 +31,9 @@ https://example.ru/3242352/file.ics 15
 3. Create a GraalVM Native image via `./gradlew dockerBuildNative`
 
 ## Run Unit tests:
-1. `./gradle clean test`
+1. `./gradlew clean test`
 
 ## Run Integration tests:
 1. Set telegram token via `TELEGRAM_TOKEN` environment variable
 2. Set MongoDB url via `MONGODB_URI` environment variable (note! you can use only `mongodb://` protocol, because of GraalVM Native image)
-3. `./gradle clean integrationTest` 
+3. `./gradlew clean integrationTest` 

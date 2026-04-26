@@ -1,11 +1,11 @@
 package ru.hixon
 
 import io.micronaut.test.extensions.junit5.annotation.MicronautTest
+import jakarta.inject.Inject
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
 import ru.hixon.ics.IcsParser
 import java.time.Duration
-import javax.inject.Inject
 
 @MicronautTest
 class IcsParserTest {
@@ -30,10 +30,10 @@ class IcsParserTest {
         Assertions.assertEquals("2020-10-24T17:00Z", calendarEvents.get(0).dateEnd.toString())
         Assertions.assertEquals(calendarEvents.get(0).dateNotification, calendarEvents.get(0).dateStart.minus(notifyBefore))
 
-        Assertions.assertEquals("Session ID: 123\r\n" +
-                "Course /Service: Speech Practice\r\n" +
-                "Teacher: Ivan Ivanov (https://www.italki.com/teacher/Ivan)\r\n" +
-                "Skype: admin@example.com\r\n" +
+        Assertions.assertEquals("Session ID: 123\n" +
+                "Course /Service: Speech Practice\n" +
+                "Teacher: Ivan Ivanov (https://www.italki.com/teacher/Ivan)\n" +
+                "Skype: admin@example.com\n" +
                 "URL: https://www.italki.com/lesson/session/123", calendarEvents.get(0).description)
 
         // event 1

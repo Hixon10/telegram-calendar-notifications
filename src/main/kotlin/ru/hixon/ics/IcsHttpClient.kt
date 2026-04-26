@@ -1,8 +1,8 @@
 package ru.hixon.ics
 
 import io.micronaut.http.client.HttpClient
+import jakarta.inject.Singleton
 import org.slf4j.LoggerFactory
-import javax.inject.Singleton
 
 @Singleton
 public class IcsHttpClient(

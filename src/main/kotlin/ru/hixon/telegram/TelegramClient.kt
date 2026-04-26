@@ -3,7 +3,6 @@ package ru.hixon.telegram
 import io.micronaut.http.annotation.Get
 import io.micronaut.http.annotation.Post
 import io.micronaut.http.client.annotation.Client
-import io.reactivex.Single
 
 @Client(TelegramConfiguration.TELEGRAM_API_URL + "/bot\${telegram.token}")
 public interface TelegramClient {

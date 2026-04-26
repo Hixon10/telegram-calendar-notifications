@@ -4,7 +4,7 @@ import biweekly.Biweekly
 import biweekly.ICalendar
 import biweekly.component.VEvent
 import biweekly.io.chain.ChainingTextParser
-import biweekly.io.chain.ChainingTextStringParser
+import jakarta.inject.Singleton
 import org.slf4j.LoggerFactory
 import ru.hixon.model.CalendarEvent
 import java.io.InputStream
@@ -12,7 +12,6 @@ import java.time.Duration
 import java.time.Instant
 import java.time.ZoneOffset
 import java.time.ZonedDateTime
-import javax.inject.Singleton
 
 
 @Singleton

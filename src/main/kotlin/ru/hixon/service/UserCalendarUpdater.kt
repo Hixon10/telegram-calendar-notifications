@@ -1,6 +1,7 @@
 package ru.hixon.service
 
 import io.micronaut.context.annotation.Context
+import jakarta.annotation.PostConstruct
 import org.slf4j.LoggerFactory
 import ru.hixon.ics.IcsHttpClient
 import ru.hixon.ics.IcsParser
@@ -8,7 +9,6 @@ import ru.hixon.model.CalendarEntity
 import ru.hixon.model.CalendarEvent
 import ru.hixon.telegram.TelegramConfiguration
 import java.time.Duration
-import javax.annotation.PostConstruct
 
 @Context
 public class UserCalendarUpdater(

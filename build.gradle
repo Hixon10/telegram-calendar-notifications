@@ -1,17 +1,16 @@
 plugins {
-    id "org.jetbrains.kotlin.jvm" version "1.4.10"
-    id "org.jetbrains.kotlin.kapt" version "1.4.10"
-    id "org.jetbrains.kotlin.plugin.allopen" version "1.4.10"
-    id "com.github.johnrengelman.shadow" version "6.0.0"
-    id "io.micronaut.application" version '1.0.3'
+    id "org.jetbrains.kotlin.jvm" version "2.3.21"
+    id "org.jetbrains.kotlin.plugin.allopen" version "2.3.21"
+    id("com.google.devtools.ksp") version "2.3.6"
+    id "com.gradleup.shadow" version "9.4.1"
+    id "io.micronaut.application" version "4.6.2"
 }
 
-version "0.1"
-group "ru.hixon"
+version = "0.1"
+group = "ru.hixon"
 
 repositories {
     mavenCentral()
-    jcenter()
 }
 
 micronaut {
@@ -24,58 +23,63 @@ micronaut {
 }
 
 test {
+    useJUnitPlatform()
     beforeTest { descriptor ->
         logger.lifecycle("Running test: ${descriptor}")
     }
     exclude 'ru/hixon/integrationtests/**'
 }
 
-def integrationTest = tasks.register("integrationTest", Test) {
+tasks.register("integrationTest", Test) {
+    description = "Runs integration tests."
+    group = "verification"
+    useJUnitPlatform()
+    testClassesDirs = sourceSets.test.output.classesDirs
+    classpath = sourceSets.test.runtimeClasspath
+    include 'ru/hixon/integrationtests/**'
     shouldRunAfter test
 }
 
 dependencies {
     compileOnly("org.graalvm.nativeimage:svm")
-    implementation("io.micronaut:micronaut-validation")
-    implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8:${kotlinVersion}")
+
+    implementation("io.micronaut.validation:micronaut-validation")
+    implementation("org.jetbrains.kotlin:kotlin-stdlib:${kotlinVersion}")
     implementation("org.jetbrains.kotlin:kotlin-reflect:${kotlinVersion}")
     implementation("io.micronaut.kotlin:micronaut-kotlin-runtime")
     implementation("io.micronaut:micronaut-runtime")
-    implementation("javax.annotation:javax.annotation-api")
+    implementation("jakarta.annotation:jakarta.annotation-api")
     implementation("io.micronaut:micronaut-http-client")
     implementation("io.micronaut.mongodb:micronaut-mongo-sync")
-    runtimeOnly("ch.qos.logback:logback-classic")
+    implementation("io.micronaut:micronaut-jackson-databind")
+    runtimeOnly("org.yaml:snakeyaml")
+
+    runtimeOnly("ch.qos.logback:logback-classic:1.5.32")
     runtimeOnly("com.fasterxml.jackson.module:jackson-module-kotlin")
 
-//     https://mvnrepository.com/artifact/net.sf.biweekly/biweekly
+    // https://mvnrepository.com/artifact/net.sf.biweekly/biweekly
     implementation files('libs/biweekly-0.6.5-SNAPSHOT.jar')
-    compile 'com.github.mangstadt:vinnie:2.0.2'
+    implementation 'com.github.mangstadt:vinnie:2.0.2'
 
     // https://mvnrepository.com/artifact/ch.qos.logback.contrib/logback-json-classic
-    compile group: 'ch.qos.logback.contrib', name: 'logback-json-classic', version: '0.1.5'
+    implementation 'ch.qos.logback.contrib:logback-json-classic:0.1.5'
     // https://mvnrepository.com/artifact/ch.qos.logback.contrib/logback-jackson
-    compile group: 'ch.qos.logback.contrib', name: 'logback-jackson', version: '0.1.5'
+    implementation 'ch.qos.logback.contrib:logback-jackson:0.1.5'
 }
 
-mainClassName = "ru.hixon.Application"
+application {
+    mainClass = "ru.hixon.Application"
+}
+
 java {
-    sourceCompatibility = JavaVersion.toVersion('11')
+    sourceCompatibility = JavaVersion.toVersion('25')
+    targetCompatibility = JavaVersion.toVersion('25')
 }
 
 kotlin {
     explicitApi = 'strict'
-}
-
-compileKotlin {
-    kotlinOptions {
-        jvmTarget = '11'
+    jvmToolchain(25)
+    compilerOptions {
+        jvmTarget = org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_25
     }
 }
-compileTestKotlin {
-    kotlinOptions {
-        jvmTarget = '11'
-    }
-}
-
-
-

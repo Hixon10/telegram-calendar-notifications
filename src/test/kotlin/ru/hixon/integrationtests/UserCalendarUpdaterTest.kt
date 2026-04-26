@@ -1,13 +1,13 @@
 package ru.hixon.integrationtests
 
 import io.micronaut.test.extensions.junit5.annotation.MicronautTest
+import jakarta.inject.Inject
 import org.junit.jupiter.api.Test
 import ru.hixon.model.CalendarEntity
 import ru.hixon.service.NotificationService
 import ru.hixon.service.StorageService
 import ru.hixon.service.UserCalendarUpdater
 import java.time.Duration
-import javax.inject.Inject
 
 @MicronautTest
 class UserCalendarUpdaterTest {
