@@ -1,6 +1,11 @@
 # Telegram calendar notifications
 
-This project contains source codes for telegram bot: https://telegram.me/calendar_notifications_bot 
+ > ## ⚠️ Bot is no longer running
+ >
+ > The hosted instance at [@calendar_notifications_bot](https://telegram.me/calendar_notifications_bot)
+ > has been shut down and will not send any further notifications. The source
+ > code remains available — if you'd like to keep using it, please self-host
+ > using the instructions below.
 
 Main purpose of this bot is notification about your calendar event, using telegram for notification target. 
 
